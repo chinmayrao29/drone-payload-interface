@@ -12,3 +12,6 @@ venv/
 fp-info-cache
 .DS_Store
 Thumbs.db
+_restore_backup_*/
+*.lck
+.history/

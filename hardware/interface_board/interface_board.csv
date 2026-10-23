@@ -1,0 +1,21 @@
+Reference,Qty,Value,DNP,Exclude from BOM,Exclude from Board,,Datasheet,Specific Component
+"C1,C2,C4,C6,C9,C10,C11",7,100n,,,,Capacitor_SMD:C_0805_2012Metric,,100nF 50V MLCC Ceramic Capacitor 0805
+"C3,C5,C7",3,10u,,,,Capacitor_SMD:C_0805_2012Metric,,10µF 25V MLCC Ceramic Capacitor 0805
+C8,1,100u,,,,Capacitor_SMD:CP_Elec_6.3x5.4,,100µF 16V Radial Electrolytic Capacitor CP_Elec_6.3x5.4
+D1,1,1N5819,,,,Diode_SMD:D_SOD-123,http://www.vishay.com/docs/88525/1n5817.pdf,1N5819 Schottky Diode SOD-123
+D2,3,LED,,,,LED_SMD:LED_0805_2012Metric,,Green LED 0805 SMD
+D3,3,LED,,,,LED_SMD:LED_0805_2012Metric,,Blue LED 0805 SMD
+D4,3,LED,,,,LED_SMD:LED_0805_2012Metric,,Red LED 0805 SMD
+J1,1,Conn_01x02,,,,Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical,,2-pin 2.54mm Male Pin Header Through-hole
+J2,1,USB_C_Receptacle,,,,Custom:CONN16_USB4085-GF-A_GCT,https://www.usb.org/sites/default/files/documents/usb_type-c.zip,GCT USB4085-GF-A USB 2.0 Type-C Receptacle 16+8 Dummy Position Through-hole Right Angle Top Mount
+"J3,J4",2,Conn_01x04,,,,Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical,,4-pin 2.54mm Male Pin Header Through-hole
+"R1,R2",2,10k,,,,Resistor_SMD:R_0805_2012Metric,,10k? 1% 0805 SMD Resistor
+"R3,R4",2,100k,,,,Resistor_SMD:R_0805_2012Metric,,100k? 1% 0805 SMD Resistor
+R5,1,0.1,,,,Resistor_SMD:R_0805_2012Metric,,0.1? 1% 0.5W 0805 SMD Current Sense Resistor
+"R6,R7",2,5k1,,,,Resistor_SMD:R_0805_2012Metric,,5.1k? 1% 0805 SMD Resistor
+"R8,R9",2,4k7,,,,Resistor_SMD:R_0805_2012Metric,,4.7k? 1% 0805 SMD Resistor
+"R10,R11,R12",3,330,,,,Resistor_SMD:R_0805_2012Metric,,330? 1% 0805 SMD Resistor
+U1,1,ESP32-S3-WROOM-1,,,,RF_Module:ESP32-S3-WROOM-1,https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf,Espressif ESP32-S3-WROOM-1-N8 WiFi+BT Module 8MB Flash
+U2,1,AMS1117-3.3,,,,Package_TO_SOT_SMD:SOT-223-3_TabPin2,http://www.advanced-monolithic.com/pdf/ds1117.pdf,AMS1117-3.3 1A LDO Voltage Regulator SOT-223
+U3,1,TPS2116DRL,,,,Package_TO_SOT_SMD:SOT-583-8,https://www.ti.com/lit/ds/symlink/tps2116.pdf,Texas Instruments TPS2116DRLR 1.6V-5.5V 2.5A Power Mux SOT-583-8
+U4,1,INA219AxD,,,,Package_SO:SOIC-8_3.9x4.9mm_P1.27mm,http://www.ti.com/lit/ds/symlink/ina219.pdf,Texas Instruments INA219AIDR Bidirectional Current/Power Monitor I2C SOIC-8
