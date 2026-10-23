@@ -1,0 +1,14 @@
+Debug/
+Release/
+build/
+.pio/
+sdkconfig.old
+__pycache__/
+*.pyc
+venv/
+.venv/
+*-backups/
+*.kicad_prl
+fp-info-cache
+.DS_Store
+Thumbs.db
