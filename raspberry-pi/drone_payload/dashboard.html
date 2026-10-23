@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drone Payload Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #185FA5;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 16px;
+            border: 1px solid #333;
+        }
+        .card h2 {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        .label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .green { background: #1D9E75; }
+        .red { background: #E24B4A; }
+        .blue { background: #185FA5; }
+        .grey { background: #555; }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+        .fault-list {
+            font-size: 12px;
+            color: #E24B4A;
+        }
+        .fault-item {
+            padding: 4px 0;
+            border-bottom: 1px solid #222;
+        }
+        #connection-status {
+            text-align: center;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            max-width: 800px;
+            margin: 0 auto 16px auto;
+        }
+        .connected-bg { background: #0F3D2A; color: #1D9E75; }
+        .disconnected-bg { background: #3D0F0F; color: #E24B4A; }
+        .battery-bar {
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .battery-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s;
+        }
+        .cmd-btn {
+            flex: 1;
+            padding: 8px;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn-blue { background: #185FA5; }
+        .btn-green { background: #1D9E75; }
+        .btn-red { background: #E24B4A; }
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Drone Payload Interface — Dashboard</h1>
+
+    <div id="connection-status" class="disconnected-bg">
+        Connecting to drone...
+    </div>
+
+    <div class="grid">
+
+        <div class="card">
+            <h2>Drone status</h2>
+            <div class="row">
+                <span class="label">Armed</span>
+                <span id="armed">—</span>
+            </div>
+            <div class="row">
+                <span class="label">Flight mode</span>
+                <span id="mode">—</span>
+            </div>
+            <div class="row">
+                <span class="label">Altitude</span>
+                <span id="alt">— m</span>
+            </div>
+            <div class="row">
+                <span class="label">Battery</span>
+                <span id="battery">— %</span>
+            </div>
+            <div class="battery-bar">
+                <div class="battery-fill" id="battery-fill"
+                     style="width:0%; background:#1D9E75"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Position</h2>
+            <div class="row">
+                <span class="label">Latitude</span>
+                <span id="lat">—</span>
+            </div>
+            <div class="row">
+                <span class="label">Longitude</span>
+                <span id="lon">—</span>
+            </div>
+            <div class="row">
+                <span class="label">Roll</span>
+                <span id="roll">— °</span>
+            </div>
+            <div class="row">
+                <span class="label">Pitch</span>
+                <span id="pitch">— °</span>
+            </div>
+            <div class="row">
+                <span class="label">Yaw</span>
+                <span id="yaw">— °</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Payload module</h2>
+            <div class="row">
+                <span class="label">Status</span>
+                <span id="module-status">
+                    <span class="status-dot grey"></span>No module
+                </span>
+            </div>
+            <div class="row">
+                <span class="label">Type</span>
+                <span id="module-name">—</span>
+            </div>
+            <div class="row">
+                <span class="label">Current draw</span>
+                <span id="module-current">— mA</span>
+            </div>
+            <div class="row">
+                <span class="label">Data status</span>
+                <span id="module-data">—</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Faults</h2>
+            <div id="fault-list" class="fault-list">
+                <div style="color:#555; font-size:12px">No faults</div>
+            </div>
+        </div>
+
+        <div class="card" id="camera-card" style="display:none; grid-column: span 2;">
+            <h2>Live camera feed</h2>
+            <img id="camera-feed" style="width:100%; border-radius:8px; display:block;" />
+        </div>
+
+        <div class="card" id="relay-card" style="display:none; grid-column: span 2;">
+            <h2>Communications relay</h2>
+            <div class="row">
+                <span class="label">Frequency</span>
+                <span id="relay-freq">—</span>
+            </div>
+            <div class="row">
+                <span class="label">Connected nodes</span>
+                <span id="relay-nodes">—</span>
+            </div>
+            <div class="row">
+                <span class="label">Node A signal</span>
+                <span id="relay-rssi-a">—</span>
+            </div>
+            <div class="row">
+                <span class="label">Node B signal</span>
+                <span id="relay-rssi-b">—</span>
+            </div>
+        </div>
+
+        <div class="card" id="tether-card" style="display:none; grid-column: span 2;">
+            <h2>Tethered sensor</h2>
+            <div class="row">
+                <span class="label">Depth</span>
+                <span id="tether-depth">— m</span>
+            </div>
+            <div class="row">
+                <span class="label">Gas (ppm)</span>
+                <span id="tether-gas">—</span>
+            </div>
+            <div class="row">
+                <span class="label">Temperature</span>
+                <span id="tether-temp">— °C</span>
+            </div>
+            <div class="btn-row">
+                <button class="cmd-btn btn-blue"
+                    onclick="sendTetherCommand('WINCH_LOWER:depth=2.0')">
+                    Lower 2m
+                </button>
+                <button class="cmd-btn btn-blue"
+                    onclick="sendTetherCommand('WINCH_LOWER:depth=5.0')">
+                    Lower 5m
+                </button>
+                <button class="cmd-btn btn-green"
+                    onclick="sendTetherCommand('WINCH_RETRACT')">
+                    Retract
+                </button>
+                <button class="cmd-btn btn-red"
+                    onclick="sendTetherCommand('WINCH_STOP')">
+                    Stop
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const host = window.location.hostname || window.location.host.split(':')[0];
+        const WS_URL = `ws://${host}:8765`;
+        let ws;
+        let reconnectTimer;
+
+        function connect() {
+            ws = new WebSocket(WS_URL);
+
+            ws.onopen = () => {
+                clearTimeout(reconnectTimer);
+                document.getElementById('connection-status').className =
+                    'connected-bg';
+                document.getElementById('connection-status').textContent =
+                    'Connected to drone';
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                updateDashboard(data);
+            };
+
+            ws.onclose = () => {
+                document.getElementById('connection-status').className =
+                    'disconnected-bg';
+                document.getElementById('connection-status').textContent =
+                    'Disconnected — reconnecting...';
+                reconnectTimer = setTimeout(connect, 2000);
+            };
+
+            ws.onerror = () => {
+                ws.close();
+            };
+        }
+
+        function updateDashboard(data) {
+            const d = data.drone;
+            const m = data.module;
+
+            // Drone status
+            document.getElementById('armed').textContent =
+                d.armed ? '⚠️ ARMED' : 'Disarmed';
+            document.getElementById('mode').textContent = d.mode;
+            document.getElementById('alt').textContent =
+                d.alt.toFixed(1) + ' m';
+            document.getElementById('battery').textContent =
+                d.battery + ' %';
+
+            // Battery bar colour
+            const fill = document.getElementById('battery-fill');
+            fill.style.width = d.battery + '%';
+            fill.style.background = d.battery > 50 ? '#1D9E75' :
+                                    d.battery > 20 ? '#EF9F27' : '#E24B4A';
+
+            // Position
+            document.getElementById('lat').textContent =
+                d.lat.toFixed(6);
+            document.getElementById('lon').textContent =
+                d.lon.toFixed(6);
+            document.getElementById('roll').textContent =
+                d.roll + ' °';
+            document.getElementById('pitch').textContent =
+                d.pitch + ' °';
+            document.getElementById('yaw').textContent =
+                d.yaw + ' °';
+
+            // Module status card
+            const dot = m.connected ? 'blue' : 'grey';
+            document.getElementById('module-status').innerHTML =
+                `<span class="status-dot ${dot}"></span>` +
+                (m.connected ? 'Connected' : 'No module');
+            document.getElementById('module-name').textContent =
+                m.connected ? m.name : '—';
+            document.getElementById('module-current').textContent =
+                m.connected ? m.current_ma + ' mA' : '—';
+            document.getElementById('module-data').textContent =
+                m.connected ? m.status : '—';
+
+            // Camera feed
+            const cameraCard = document.getElementById('camera-card');
+            const cameraFeed = document.getElementById('camera-feed');
+            if (m.connected && m.type === 'camera' && m.stream_url) {
+                cameraCard.style.display = 'block';
+                if (cameraFeed.src !== m.stream_url) {
+                    cameraFeed.src = m.stream_url;
+                }
+            } else {
+                cameraCard.style.display = 'none';
+                cameraFeed.src = '';
+            }
+
+            // Relay card
+            const relayCard = document.getElementById('relay-card');
+            if (m.connected && m.type === 'comms_relay' && m.relay_data) {
+                relayCard.style.display = 'block';
+                document.getElementById('relay-freq').textContent =
+                    m.relay_data.frequency + ' MHz';
+                document.getElementById('relay-nodes').textContent =
+                    m.relay_data.nodes;
+                document.getElementById('relay-rssi-a').textContent =
+                    m.relay_data.rssi_a + ' dBm';
+                document.getElementById('relay-rssi-b').textContent =
+                    m.relay_data.rssi_b + ' dBm';
+            } else {
+                relayCard.style.display = 'none';
+            }
+
+            // Tether card
+            const tetherCard = document.getElementById('tether-card');
+            if (m.connected && m.type === 'tethered_sensor' && m.tether_data) {
+                tetherCard.style.display = 'block';
+                document.getElementById('tether-depth').textContent =
+                    m.tether_data.depth.toFixed(1) + ' m';
+                document.getElementById('tether-gas').textContent =
+                    m.tether_data.gas_ppm.toFixed(0);
+                document.getElementById('tether-temp').textContent =
+                    m.tether_data.temp.toFixed(1) + ' °C';
+            } else {
+                tetherCard.style.display = 'none';
+            }
+
+            // Faults
+            const faultList = document.getElementById('fault-list');
+            if (data.faults.length === 0) {
+                faultList.innerHTML =
+                    '<div style="color:#555;font-size:12px">No faults</div>';
+            } else {
+                faultList.innerHTML = data.faults.map(f =>
+                    `<div class="fault-item">${f.time} — ${f.message}</div>`
+                ).join('');
+            }
+        }
+
+        async function sendTetherCommand(command) {
+            try {
+                await fetch('/tether_command', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ command: command })
+                });
+            } catch (e) {
+                console.error('Tether command failed:', e);
+            }
+        }
+
+        connect();
+    </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+    "type": 3,
+    "name": "LiDAR scanner",
+    "script": "modules/lidar_module.py",
+    "params": {
+        "scan_rate": 10,
+        "range_max": 100
+    }
+}

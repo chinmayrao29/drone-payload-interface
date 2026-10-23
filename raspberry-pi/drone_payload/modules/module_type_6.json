@@ -1,0 +1,9 @@
+{
+    "type": 6,
+    "name": "Communications relay",
+    "script": "modules/relay_module.py",
+    "params": {
+        "frequency": 868,
+        "spreading_factor": 7
+    }
+}

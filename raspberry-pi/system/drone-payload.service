@@ -1,0 +1,14 @@
+[Unit]
+Description=Drone Payload System
+After=network.target
+
+[Service]
+Type=simple
+User=chinmay
+WorkingDirectory=/home/chinmay/drone_payload
+ExecStart=/usr/bin/python3 /home/chinmay/drone_payload/main.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

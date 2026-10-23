@@ -1,0 +1,8 @@
+{
+    "type": 7,
+    "name": "Tethered sensor",
+    "script": "modules/tether_module.py",
+    "params": {
+        "max_depth": 10.0
+    }
+}~
