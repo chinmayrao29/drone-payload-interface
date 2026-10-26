@@ -16,3 +16,4 @@ void comms_send_pi(const char* message);
 void comms_send_module(const char* message);
 String comms_read_pi();
 String comms_read_module();
+void comms_poll();

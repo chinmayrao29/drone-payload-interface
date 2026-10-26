@@ -53,7 +53,7 @@ for(int i = 0; i < 9; i++) {
 pinMode(9, INPUT);
 delay(100);
     // I2C setup
-    Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
+    //Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
     Wire.setClock(100000);
     
     // Heartbeat interrupt

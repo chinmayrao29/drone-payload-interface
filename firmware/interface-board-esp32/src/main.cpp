@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Wire.h>
 #include "detection.h"
 #include "power.h"
 #include "comms.h"
@@ -27,6 +28,7 @@ void setup() {
     // Initialize all systems
     comms_init();
     Serial.println("comms_init OK");
+    Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
     power_init();
     Serial.println("power_init OK");
     detection_init();
@@ -40,6 +42,7 @@ void setup() {
 }
 
 void loop() {
+    comms_poll();
     switch (currentState) {
         case STATE_IDLE:
             idle_loop();
