@@ -88,9 +88,11 @@ bool read_eeprom(ModuleProfile* profile)
 {
     // AT24C32 requires TWO address bytes before reading, unlike AT24C02
     // which only needs one. Send 0x00 0x00 to set pointer to start of memory.
+    bool read_eeprom(ModuleProfile* profile)
+{
+    // AT24C02: single address byte. Set the read pointer to 0x00.
     Wire.beginTransmission(EEPROM_ADDR);
-    Wire.write(0x00); // high address byte
-    Wire.write(0x00); // low address byte
+    Wire.write(0x00);
     if (Wire.endTransmission() != 0) {
         Serial.println("EEPROM not found");
         return false;

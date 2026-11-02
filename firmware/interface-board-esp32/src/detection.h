@@ -14,7 +14,7 @@
 #define PIN_HEARTBEAT   5
 
 // EEPROM address
-#define EEPROM_ADDR     0x57
+#define EEPROM_ADDR     0x50
 
 // Module type IDs
 #define MODULE_UNKNOWN          0xFF
